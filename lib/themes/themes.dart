@@ -4,7 +4,8 @@ class Themes {
   static ThemeData dark_theme = ThemeData(
     colorScheme: ColorScheme.dark(
       primary: Color(0xFFfbf4fc),
-      background: Colors.black54
+      background: Colors.black54,
+      secondary: Colors.grey,
     )
   );
 
@@ -12,6 +13,7 @@ class Themes {
     colorScheme: ColorScheme.light(
       background: Color(0xFFfbf4fc),
       primary: Colors.grey.shade700,
+      secondary: Colors.white
     )
   );
 }

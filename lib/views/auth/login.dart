@@ -14,11 +14,8 @@ class _LoginPageState extends State<LoginPage> {
     double media_width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            
-          ],
+        appBar: AppBar(
+          title: Text("login In"),
         ),
       ),
     );

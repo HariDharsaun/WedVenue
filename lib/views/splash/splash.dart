@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
+import 'package:hall_booking_app/routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -60,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Color(0xFFd053d4),
                   Colors.white,
                   "Get Started",
-                  () {},
+                  () {Get.offNamed(AppRoutes.signup);},
                 ),
                 SizedBox(height: 15),
                 getstartButton(
@@ -68,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Color(0xFFfbf4fc),
                   Colors.purple,
                   "Already have an account?",
-                  () {},
+                  () {Get.offNamed(AppRoutes.login);},
                 ),
               ],
             ),
