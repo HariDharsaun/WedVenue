@@ -11,7 +11,10 @@ dependencies:
     sdk: flutter
   get:
   firebase_auth: 
-  firebase_core: 
+  firebase_core:
+  cloud_firestore:
+  animated_bottom_navigation_bar:
+  font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
+import 'package:hall_booking_app/get%20controllers/auth.dart';
 import 'package:hall_booking_app/routes/app_routes.dart';
-import 'package:hall_booking_app/services/auth_services/auth_service.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -14,18 +15,18 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   bool isPhone = true;
-  AuthService auth_service = AuthService();
+  bool _obscurePassword = true;
 
   TextEditingController name_controller = TextEditingController();
   TextEditingController phone_controller = TextEditingController();
   TextEditingController email_controller = TextEditingController();
-  TextEditingController loc_controller = TextEditingController();
+  TextEditingController pwd_controller = TextEditingController();
+  final auth_controller = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
     double media_height = MediaQuery.of(context).size.height;
     double media_width = MediaQuery.of(context).size.width;
-    ColorScheme theme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,16 +40,12 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Align(
               alignment: Alignment.topCenter,
               child: Container(
-                padding: EdgeInsets.all(20),
-                alignment: Alignment.topCenter,
+                padding: EdgeInsets.all(10),
                 width: media_width * 0.9,
                 height: media_height * 0.8,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    width: .5,
-                    color: Colors.grey.shade500,
-                  ),
+                  border: Border.all(width: .5, color: Colors.grey.shade500),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,53 +56,81 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: TextStyle(color: Colors.grey.shade600),
                     ),
                     SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Full Name"),
-                        textfield("Enter your full name", name_controller, TextInputType.text),
-                      ],
-                    ),
+
+                    //Full Name
+                    Text("Full Name"),
+                    textfield("eg: John Doe", name_controller, TextInputType.text),
                     SizedBox(height: 10),
-                    toggle(theme.secondary),
+
+                    //Email
+                    Text("Email"),
+                    textfield("example@gmail.com", email_controller, TextInputType.emailAddress),
                     SizedBox(height: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(isPhone ? "Phone Number" : "Email"),
-                        textfield(
-                          isPhone ? "+91 123 456 7890" : "example@gmail.com",
-                          isPhone ? phone_controller : email_controller,
-                          isPhone ? TextInputType.phone : TextInputType.emailAddress,
+
+                    //Password
+                    Text("Password"),
+                    TextField(
+                      cursorColor: Colors.grey,
+                      style: TextStyle(color: Colors.black),
+                      controller: pwd_controller,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        hintText: "eg: John@123",
+                        hintStyle: TextStyle(color: Colors.grey.shade500),
+                        filled: true,
+                        fillColor: Colors.grey.shade200,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
                         ),
-                      ],
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
                     ),
                     SizedBox(height: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Location (optional)"),
-                        textfield("City, State", loc_controller, TextInputType.text),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    sendotpButton(() {
-                      // String phone = phone_controller.text.trim();
-                      // if (phone.length == 10 && RegExp(r'^[0-9]+$').hasMatch(phone)) {
-                      //   auth_service.sendOtp("+91$phone");
-                      // } else {
-                      //   Get.snackbar("Invalid Phone", "Enter a valid 10-digit phone number");
-                      // }
-                      Get.toNamed(AppRoutes.otp);
+
+                    //Phone
+                    Text("Phone Number"),
+                    textfield("+91 123 456 7890", phone_controller, TextInputType.phone),
+                    SizedBox(height: 20),
+
+                    // //Location
+                    // Text("Location (optional)"),
+                    // textfield("City, State", loc_controller, TextInputType.text),
+                    // SizedBox(height: 30),
+
+                    registerButton(() {
+                      if (signupValidation()) {
+                        auth_controller.createAccount(name_controller.text.trim(), email_controller.text.trim(), pwd_controller.text.trim(), phone_controller.text.trim());
+                      }
                     }),
+
                     Expanded(child: SizedBox()),
+
+                    //Login text
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('Already have an account?', style: TextStyle(color: Colors.grey.shade600)),
                         SizedBox(width: 5),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Get.offAllNamed(AppRoutes.login);
+                          },
                           child: Text('Log in', style: TextStyle(color: Colors.grey)),
                         ),
                       ],
@@ -120,80 +145,69 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget toggle(Color color) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => isPhone = true),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: isPhone ? color : Colors.transparent,
-                ),
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
-                    Icon(Icons.phone_outlined,color: Colors.black),
-                    SizedBox(width: 20,),
-                    Text('Phone',style: TextStyle(color: Colors.black),)
-                  ]
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 5),
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => isPhone = false),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: !isPhone ? color: Colors.transparent,
-                ),
-                padding: EdgeInsets.all(10),
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
-                    Icon(Icons.email_outlined,color: Colors.black,),
-                    SizedBox(width: 20,),
-                    Text('Email',style: TextStyle(color: Colors.black))
-                  ]
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(email);
   }
 
-  Widget sendotpButton(Callback func) {
+  bool isValidPassword(String password) {
+    final regex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$');
+    return regex.hasMatch(password);
+  }
+
+  bool isValidPhone(String phone)
+  {
+    final phoneRegex = RegExp(r'^[0-9]+$');
+    return phone.length == 10 && phoneRegex.hasMatch(phone);
+  }
+
+  bool signupValidation()
+  {
+    if(name_controller.text.isEmpty || email_controller.text.isEmpty || phone_controller.text.isEmpty)
+    {
+      Get.snackbar("Empty Field", "All fields are required!",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red.shade300,colorText: Colors.white,);
+      return false;
+    }
+    else if(!isValidEmail(email_controller.text.trim()))
+    {
+      Get.snackbar("Invalid Email", "Please enter a valid email",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red.shade300,colorText: Colors.white);
+      return false;
+    }
+    else if(!isValidPassword(pwd_controller.text.trim()))
+    {
+      if(pwd_controller.text.trim().length < 6)
+      {
+       Get.snackbar("Invalid password", "Password must contains atleast 6 characters",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red.shade300,colorText: Colors.white); 
+      }
+      else{
+        Get.snackbar("Invalid password", "Password must contains 1 special character with letters & numbers",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red.shade300,colorText: Colors.white);
+      }
+      return false;
+    }
+    else if(!isValidPhone(phone_controller.text.trim()))
+    {
+      Get.snackbar("Invalid phone", "Please enter a valid phone number",snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red.shade300,colorText: Colors.white);
+      return false;
+    }
+    return true;
+  }
+
+  Widget registerButton(Callback func) {
     return GestureDetector(
       onTap: func,
-      child: Container(
+      child: Obx(()=>Container(
         alignment: Alignment.center,
         width: double.infinity,
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.grey.shade600,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Text(
-          "Send OTP",
+        child: auth_controller.isLoading.value? CircularProgressIndicator(color: Colors.white,): Text(
+          "Register",
           style: TextStyle(color: Colors.white),
         ),
-      ),
+      ),)
     );
   }
 

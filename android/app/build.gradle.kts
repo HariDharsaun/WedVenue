@@ -42,6 +42,20 @@ android {
     }
 }
 
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+
+    // Firebase services
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+
+    // Android + Kotlin
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.10.0")
+}
+
 flutter {
     source = "../.."
 }
