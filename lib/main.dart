@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hall_booking_app/bindings/bindings.dart';
 import 'package:hall_booking_app/firebase_options.dart';
 import 'package:hall_booking_app/get%20controllers/auth.dart';
 import 'package:hall_booking_app/routes/app_pages.dart';
@@ -29,7 +30,7 @@ class MainApp extends StatelessWidget {
     final AuthController authController = Get.find();
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // initialBinding: AppBindings(),
+      initialBinding: AppBindings(),
       home: Obx(()
       {
         if(authController.isLoggedIn)
