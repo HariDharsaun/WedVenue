@@ -24,14 +24,6 @@ class _PagestackState extends State<Pagestack> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[_bottomNavIndex],
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: Colors.purple,
-      //   child: Icon(Icons.add, color: Colors.white),
-      //   onPressed: () {
-
-      //   },
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
         backgroundColor: Color(0xFFd053d4),
         gapLocation: GapLocation.none,
