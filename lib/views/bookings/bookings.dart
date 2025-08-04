@@ -7,6 +7,7 @@ class BookingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Bookings"),),
+      body: Container()
     );
   }
 }

@@ -8,11 +8,11 @@ class Usercontroller extends GetxController{
   var username  = "".obs;
   var email = "".obs;
   var phno = "".obs;
-  var avatarPath = "".obs;
+  // var avatarPath = "".obs;
   var isEditing = false.obs;
   var isLoading = false.obs;
 
-  List<String> default_avatars = [];
+  // List<String> default_avatars = [];
 
   @override
   onInit()
@@ -44,7 +44,7 @@ class Usercontroller extends GetxController{
     isEditing(false);
   }
 
-  void selectAvatar(String path) {
-    avatarPath.value = path;
-  }
+  // void selectAvatar(String path) {
+  //   avatarPath.value = path;
+  // }
 }

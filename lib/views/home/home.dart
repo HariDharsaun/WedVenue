@@ -1,131 +1,171 @@
 import 'package:flutter/material.dart';
-import 'package:hall_booking_app/models/hallmodel.dart';
+import 'package:get/get.dart';
+import 'package:hall_booking_app/get%20controllers/venue.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class VenueListPage extends StatelessWidget {
+  final VenueController venueController = Get.put(VenueController());
 
-  final TextEditingController search_Controller = TextEditingController();
-
-  final List<HallModel> halls = [
-    HallModel(
-      name: "Royal Palace Banquet",
-      address: "Downtown, Mumbai",
-      capacity: "500",
-      price: "1,50,000",
-      ratings: "4.8",
-      facilities: ['AC', 'Parking', 'Catering', 'Decoration'],
-      isBooked: false,
-    ),
-    HallModel(
-      name: "Garden Paradise Resort",
-      address: "Suburbs, Mumbai",
-      capacity: "300",
-      price: "2,00,000",
-      ratings: "4.9",
-      facilities: ['Garden', 'Pool', 'AC', 'Parking'],
-      isBooked: true,
-    ),
-  ];
+  VenueListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            // Header
-            ListTile(
-              title: const Text("Find Your Venue"),
-              subtitle: Text(
-                "Perfect spaces for your special day",
-                style: TextStyle(color: Colors.grey.shade500),
+    // Get screen size
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Find Your Venue"),
+        centerTitle: true,
+      ),
+      body: Obx(() {
+        return ListView.builder(
+          padding: EdgeInsets.all(screenWidth * 0.03), // dynamic padding
+          itemCount: venueController.venues.length,
+          itemBuilder: (context, index) {
+            final venue = venueController.venues[index];
+            return Card(
+              margin: EdgeInsets.only(bottom: screenHeight * 0.02),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              trailing: const Icon(Icons.person_outlined),
-            ),
-
-            // Search bar
-            searchBar(),
-            const SizedBox(height: 5),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: .5,
-                color: Colors.grey.shade400,
-              ),
-            ),
-
-            Expanded(
-              child: halls.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(Icons.no_accounts),
-                          SizedBox(height: 10),
-                          Text("No halls available to book."),
-                        ],
+              elevation: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Venue Image
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                        child: Image.asset(
+                          venue.imageUrl,
+                          height: screenHeight * 0.25, // 25% of screen height
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    )
-                  : ListView.builder(
-                      itemCount: halls.length,
-                      itemBuilder: (context, index) {
-                        final hall = halls[index];
-                        return Card(
-                          margin: const EdgeInsets.all(10),
-                          elevation: 3,
-                          child: ListTile(
-                            title: Text(hall.name),
-                            subtitle: Text("${hall.address}\nCapacity: ${hall.capacity}"),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("₹${hall.price}"),
-                                Text(
-                                  "⭐ ${hall.ratings}",
-                                  style: const TextStyle(color: Colors.orange),
-                                ),
-                              ],
+                      Positioned(
+                        right: 10,
+                        top: 10,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.02,
+                            vertical: screenHeight * 0.005,
+                          ),
+                          decoration: BoxDecoration(
+                            color: venue.available ? Colors.green : Colors.red,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            venue.available ? "Available" : "Booked",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: screenWidth * 0.035, // responsive font
                             ),
                           ),
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+                        ),
+                      ),
+                    ],
+                  ),
 
-  Widget searchBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: TextField(
-        controller: search_Controller,
-        style: const TextStyle(color: Colors.black),
-        cursorColor: Colors.grey,
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.search, color: Colors.grey),
-          fillColor: Colors.grey.shade200,
-          filled: true,
-          hintText: "Search venues, locations...",
-          hintStyle: TextStyle(color: Colors.grey.shade500),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.grey, width: 2),
-          ),
-        ),
-      ),
+                  // Venue Details
+                  Padding(
+                    padding: EdgeInsets.all(screenWidth * 0.03),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          venue.name,
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.045, // responsive font
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.005),
+                        Row(
+                          children: [
+                            Icon(Icons.location_on, size: screenWidth * 0.045, color: Colors.grey),
+                            SizedBox(width: screenWidth * 0.02),
+                            Expanded(
+                              child: Text(
+                                venue.location,
+                                style: TextStyle(fontSize: screenWidth * 0.035),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: screenWidth * 0.04),
+                            Icon(Icons.people, size: screenWidth * 0.045, color: Colors.grey),
+                            SizedBox(width: screenWidth * 0.02),
+                            Text(
+                              venue.capacity,
+                              style: TextStyle(fontSize: screenWidth * 0.035),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        Row(
+                          children: [
+                            Icon(Icons.star, size: screenWidth * 0.045, color: Colors.amber),
+                            SizedBox(width: screenWidth * 0.02),
+                            Text("${venue.rating}",
+                                style: TextStyle(fontSize: screenWidth * 0.035)),
+                            SizedBox(width: screenWidth * 0.04),
+                            Text(
+                              venue.price,
+                              style: TextStyle(
+                                fontSize: screenWidth * 0.04,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+
+                        // Facilities
+                        Wrap(
+                          spacing: screenWidth * 0.02,
+                          children: venue.facilities.map((f) {
+                            return Chip(
+                              label: Text(
+                                f,
+                                style: TextStyle(fontSize: screenWidth * 0.032),
+                              ),
+                              backgroundColor: Colors.grey.shade200,
+                            );
+                          }).toList(),
+                        ),
+
+                        SizedBox(height: screenHeight * 0.015),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: screenWidth * 0.06,
+                                vertical: screenHeight * 0.015,
+                              ),
+                              backgroundColor: Colors.black
+                            ),
+                            onPressed: () {
+                              // Navigate to details page
+                            },
+                            child: Text(
+                              "View Details",
+                              style: TextStyle(fontSize: screenWidth * 0.025,color: Colors.white),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

@@ -15,6 +15,7 @@ dependencies:
   cloud_firestore:
   animated_bottom_navigation_bar:
   font_awesome_flutter:
+  table_calendar:
 
 dev_dependencies:
   flutter_test:
@@ -25,3 +26,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/app_icons/
+    - assets/venue_images/

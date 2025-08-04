@@ -11,6 +11,6 @@ class AppPages {
     GetPage(name: AppRoutes.login, page: ()=>LoginPage()),
     GetPage(name: AppRoutes.splash, page: ()=>SplashScreen()),
     GetPage(name: AppRoutes.signup, page: ()=> SignUpPage()),
-    GetPage(name: AppRoutes.home, page: ()=> HomeScreen())
+    GetPage(name: AppRoutes.home, page: ()=> VenueListPage())
   ];
 }

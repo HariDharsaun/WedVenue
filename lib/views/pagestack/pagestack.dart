@@ -15,7 +15,7 @@ class _PagestackState extends State<Pagestack> {
   int _bottomNavIndex = 0;
   List<IconData> iconlist = [Icons.home, Icons.book_online, Icons.people,Icons.settings];
   List<Widget> pages = [
-    HomeScreen(),
+    VenueListPage(),
     BookingsPage(),
     ProfilePage(),
   ];

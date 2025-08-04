@@ -79,7 +79,7 @@ class ProfilePage extends StatelessWidget {
                             children: [
                               Icon(Icons.email_outlined,color: Colors.purple),
                               SizedBox(width: 20,),
-                              Text(userController.email.value,style: TextStyle(color: Colors.grey.shade700,),)
+                              Text(userController.email.value,style: TextStyle(color: Colors.grey[600],),)
                             ]
                           ),
                           SizedBox(height: 15,),
@@ -87,7 +87,7 @@ class ProfilePage extends StatelessWidget {
                             children: [
                               Icon(Icons.phone_outlined,color: Colors.purple,),
                               SizedBox(width: 20,),
-                              Text(userController.phno.value,style: TextStyle(color: Colors.grey.shade700),)
+                              Text("+91 ${userController.phno.value}",style: TextStyle(color:Colors.grey[600]),)
                             ]
                           ),
                         ],
@@ -129,7 +129,7 @@ class ProfilePage extends StatelessWidget {
                                   width: 1
                                 ),
                                 borderRadius: BorderRadius.circular(15),
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade300,
                               ),
                               child: Text("Cancel",style: TextStyle(color: Colors.black),),
                             ),
@@ -308,7 +308,7 @@ class ProfilePage extends StatelessWidget {
       cursorColor: Colors.grey,
       keyboardType: inputtype,
       decoration: InputDecoration(
-        fillColor: Colors.grey.shade100,
+        fillColor: Colors.grey.shade300,
         filled: true,
         hintText: content,
         hintStyle: TextStyle(color: Colors.grey.shade500),
