@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hall_booking_app/get%20controllers/venue.dart';
+import 'package:hall_booking_app/routes/app_routes.dart';
 
 class VenueListPage extends StatelessWidget {
   final VenueController venueController = Get.put(VenueController());
@@ -20,7 +21,7 @@ class VenueListPage extends StatelessWidget {
       ),
       body: Obx(() {
         return ListView.builder(
-          padding: EdgeInsets.all(screenWidth * 0.03), // dynamic padding
+          padding: EdgeInsets.all(screenWidth * 0.03),
           itemCount: venueController.venues.length,
           itemBuilder: (context, index) {
             final venue = venueController.venues[index];
@@ -36,14 +37,20 @@ class VenueListPage extends StatelessWidget {
                   // Venue Image
                   Stack(
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                        child: Image.asset(
-                          venue.imageUrl,
-                          height: screenHeight * 0.25, // 25% of screen height
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                      //Venue Images
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                      //   child: Image.asset(
+                      //     venue.imageUrl,
+                      //     height: screenHeight * 0.25,
+                      //     width: double.infinity,
+                      //     fit: BoxFit.cover,
+                      //   ),
+                      // ),
+                      Container(
+                        color: Colors.blueGrey,
+                        height: screenHeight * 0.25,
+                        width: double.infinity,
                       ),
                       Positioned(
                         right: 10,
@@ -79,7 +86,7 @@ class VenueListPage extends StatelessWidget {
                         Text(
                           venue.name,
                           style: TextStyle(
-                            fontSize: screenWidth * 0.045, // responsive font
+                            fontSize: screenWidth * 0.042, // responsive font
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -91,7 +98,7 @@ class VenueListPage extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 venue.location,
-                                style: TextStyle(fontSize: screenWidth * 0.035),
+                                style: TextStyle(fontSize: screenWidth * 0.032),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -100,7 +107,7 @@ class VenueListPage extends StatelessWidget {
                             SizedBox(width: screenWidth * 0.02),
                             Text(
                               venue.capacity,
-                              style: TextStyle(fontSize: screenWidth * 0.035),
+                              style: TextStyle(fontSize: screenWidth * 0.032),
                             ),
                           ],
                         ),
@@ -115,7 +122,7 @@ class VenueListPage extends StatelessWidget {
                             Text(
                               venue.price,
                               style: TextStyle(
-                                fontSize: screenWidth * 0.04,
+                                fontSize: screenWidth * 0.040,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -128,9 +135,12 @@ class VenueListPage extends StatelessWidget {
                           spacing: screenWidth * 0.02,
                           children: venue.facilities.map((f) {
                             return Chip(
+                              side: BorderSide(
+                                style: BorderStyle.none,
+                              ),
                               label: Text(
                                 f,
-                                style: TextStyle(fontSize: screenWidth * 0.032),
+                                style: TextStyle(fontSize: screenWidth * 0.025,color: Colors.black),
                               ),
                               backgroundColor: Colors.grey.shade200,
                             );
@@ -143,13 +153,13 @@ class VenueListPage extends StatelessWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(
-                                horizontal: screenWidth * 0.06,
-                                vertical: screenHeight * 0.015,
+                                horizontal: screenWidth * 0.04,
+                                vertical: screenHeight * 0.010,
                               ),
-                              backgroundColor: Colors.black
+                              backgroundColor: Colors.purple
                             ),
                             onPressed: () {
-                              // Navigate to details page
+                              Get.toNamed(AppRoutes.viewDetails);
                             },
                             child: Text(
                               "View Details",

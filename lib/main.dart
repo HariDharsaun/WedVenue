@@ -7,7 +7,6 @@ import 'package:hall_booking_app/get%20controllers/auth.dart';
 import 'package:hall_booking_app/routes/app_pages.dart';
 import 'package:hall_booking_app/themes/themes.dart';
 import 'package:hall_booking_app/views/auth/login.dart';
-import 'package:hall_booking_app/views/home/home.dart';
 import 'package:hall_booking_app/views/pagestack/pagestack.dart';
 
 
