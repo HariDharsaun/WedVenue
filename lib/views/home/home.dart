@@ -159,7 +159,7 @@ class VenueListPage extends StatelessWidget {
                               backgroundColor: Colors.purple
                             ),
                             onPressed: () {
-                              Get.toNamed(AppRoutes.viewDetails);
+                              Get.toNamed(AppRoutes.viewDetails,arguments: venue);
                             },
                             child: Text(
                               "View Details",

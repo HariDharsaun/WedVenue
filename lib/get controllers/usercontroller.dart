@@ -23,7 +23,7 @@ class Usercontroller extends GetxController{
   Future<void> loadUser () async 
   {
     isLoading(true);
-    final String uid = auth.currentUser!.uid;
+    final String? uid = auth.currentUser?.uid;
     final doc = await firestore.collection("Users").doc(uid).get();
     if(doc.exists)
     {

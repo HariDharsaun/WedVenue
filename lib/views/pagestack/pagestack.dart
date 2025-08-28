@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hall_booking_app/views/bookings/bookings.dart';
 import 'package:hall_booking_app/views/home/home.dart';
 import 'package:hall_booking_app/views/profile/profile.dart';
+import 'package:hall_booking_app/views/settings/settings.dart';
 
 class Pagestack extends StatefulWidget {
   const Pagestack({super.key});
@@ -18,6 +19,7 @@ class _PagestackState extends State<Pagestack> {
     VenueListPage(),
     BookingsPage(),
     ProfilePage(),
+    SettingsPage()
   ];
 
   @override

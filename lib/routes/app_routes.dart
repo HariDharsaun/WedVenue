@@ -4,4 +4,5 @@ class AppRoutes {
   static String signup = '/signup';
   static String home = '/home';
   static String viewDetails = '/viewDetails';
+  static String settings = '/settings';
 }
