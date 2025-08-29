@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hall_booking_app/models/venuemodel.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class VenueDetailsPage extends StatelessWidget {
+class VenueDetailsPage extends StatefulWidget {
   final VenueModel venue;
 
   const VenueDetailsPage({super.key, required this.venue});
 
+  @override
+  State<VenueDetailsPage> createState() => _VenueDetailsPageState();
+}
+
+class _VenueDetailsPageState extends State<VenueDetailsPage> {
+  DateTime focused_Day = DateTime.now();
+  DateTime Selected_Day = DateTime.now();
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -14,7 +22,7 @@ class VenueDetailsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Venue Details", style: TextStyle(fontSize: 16)),
+        title: const Text("Venue Details",),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -36,11 +44,11 @@ class VenueDetailsPage extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: venue.available ? Colors.green : Colors.red,
+                      color: widget.venue.available ? Colors.green : Colors.red,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      venue.available ? "Available" : "Booked",
+                      widget.venue.available ? "Available" : "Booked",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -56,7 +64,7 @@ class VenueDetailsPage extends StatelessWidget {
 
             // Venue Name
             Text(
-              venue.name,
+              widget.venue.name,
               style: TextStyle(
                 fontSize: screenWidth * 0.048,
                 fontWeight: FontWeight.bold,
@@ -71,7 +79,7 @@ class VenueDetailsPage extends StatelessWidget {
                 SizedBox(width: screenWidth * 0.012),
                 Expanded(
                   child: Text(
-                    venue.location,
+                    widget.venue.location,
                     style: TextStyle(fontSize: screenWidth * 0.036, color: Colors.black87),
                   ),
                 ),
@@ -79,7 +87,7 @@ class VenueDetailsPage extends StatelessWidget {
                 Icon(Icons.people, color: Colors.grey, size: screenWidth * 0.045),
                 SizedBox(width: screenWidth * 0.012),
                 Text(
-                  venue.capacity,
+                  widget.venue.capacity,
                   style: TextStyle(fontSize: screenWidth * 0.036, color: Colors.black87),
                 ),
               ],
@@ -93,12 +101,12 @@ class VenueDetailsPage extends StatelessWidget {
                 Icon(Icons.star, color: Colors.amber, size: screenWidth * 0.045),
                 SizedBox(width: screenWidth * 0.012),
                 Text(
-                  "${venue.rating}",
+                  "${widget.venue.rating}",
                   style: TextStyle(fontSize: screenWidth * 0.036, fontWeight: FontWeight.w600),
                 ),
                 const Spacer(),
                 Text(
-                  venue.price,
+                  widget.venue.price,
                   style: TextStyle(
                     fontSize: screenWidth * 0.044,
                     fontWeight: FontWeight.bold,
@@ -116,7 +124,7 @@ class VenueDetailsPage extends StatelessWidget {
                 style: TextStyle(fontSize: screenWidth * 0.044, fontWeight: FontWeight.bold)),
             SizedBox(height: screenHeight * 0.012),
             Text(
-              "Elegant banquet hall perfect for grand weddings with modern facilities and beautiful ambiance.",
+              widget.venue.about,
               style: TextStyle(fontSize: screenWidth * 0.034, color: Colors.black87, height: 1.5),
             ),
 
@@ -129,7 +137,7 @@ class VenueDetailsPage extends StatelessWidget {
             Wrap(
               spacing: 10,
               runSpacing: 8,
-              children: venue.facilities.map((f) {
+              children: widget.venue.facilities.map((f) {
                 return Chip(
                   label: Text(
                     f,
@@ -150,14 +158,88 @@ class VenueDetailsPage extends StatelessWidget {
             Text("Check Availability",
                 style: TextStyle(fontSize: screenWidth * 0.044, fontWeight: FontWeight.bold)),
             SizedBox(height: screenHeight * 0.015),
-            CalendarDatePicker(
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: DateTime(DateTime.now().year,DateTime.now().month+6,DateTime.now().day),
-              onDateChanged: (date) {
-                print("Selected Date: $date");
+            TableCalendar(
+              focusedDay: focused_Day,
+              firstDay: DateTime.now(),
+              lastDay: DateTime(DateTime.now().year, DateTime.now().month + 5, DateTime.now().day),
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+              ),
+
+              selectedDayPredicate: (day) { 
+                return isSameDay(Selected_Day, day);
               },
+
+              onDaySelected: (selectedDay, focusedDay) {
+                 bool isBooked = widget.venue.bookedDates.any((bookedDay)=>isSameDay(selectedDay, bookedDay));
+                if(isBooked){
+                  Get.snackbar(
+                    'Unavailable', 'This Date is already booked!',
+                    snackPosition: SnackPosition.BOTTOM,
+                    snackStyle: SnackStyle.FLOATING,
+                    backgroundColor: Colors.red.shade400,
+                    colorText: Colors.white
+                  );
+                  return;
+                }
+                setState(() {
+                  focused_Day = focusedDay;
+                  Selected_Day = selectedDay;
+                });
+              },
+
+              calendarBuilders: CalendarBuilders(
+                defaultBuilder: (context, day, focusedDay) {
+                  for (var booked in widget.venue.bookedDates) {
+                    if (day.year == booked.year &&
+                        day.month == booked.month &&
+                        day.day == booked.day) {
+                      return Container(
+                        margin: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${day.day}',
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
+                  }
+                  return null;
+                },
+                selectedBuilder: (context, day, focusedDay) {
+                  return Container(
+                    margin: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.purple,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${day.day}',
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                },
+              ),
             ),
+            // CalendarDatePicker(
+            //   initialDate: DateTime.now(),
+            //   firstDate: DateTime.now(),
+            //   lastDate: DateTime(DateTime.now().year,DateTime.now().month+6,DateTime.now().day),
+            //   selectableDayPredicate: (day){
+            //     for(var date in venue.bookedDates){
+            //       if(date.year == day.year && date.month == day.month && date.day == day.day) return false;
+            //     }
+            //     return true;
+            //   },
+            //   onDateChanged: (date) {
+            //     print("Selected Date: $date");
+            //   },
+            // ),
             SizedBox(height: screenHeight * 0.012),
             Text("Available dates are highlighted",
                 style: TextStyle(color: Colors.green, fontSize: screenWidth * 0.032)),
@@ -177,7 +259,7 @@ class VenueDetailsPage extends StatelessWidget {
                     horizontal: screenWidth * 0.035, vertical: screenHeight * 0.012),
                 leading: Icon(Icons.phone, size: screenWidth * 0.06, color: Colors.purple),
                 title: Text("Venue Manager", style: TextStyle(fontSize: screenWidth * 0.036)),
-                subtitle: Text(venue.phno, style: TextStyle(fontSize: screenWidth * 0.032)),
+                subtitle: Text(widget.venue.phno, style: TextStyle(fontSize: screenWidth * 0.032)),
                 trailing: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(

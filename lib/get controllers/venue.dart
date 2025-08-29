@@ -7,11 +7,20 @@ class VenueController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  void onInit() {
-    super.onInit();
-    saveVenuesToFirestore();
-    fetchVenues();
+ void onInit() {
+  super.onInit();
+  _checkAndSaveVenues();
+}
+
+Future<void> _checkAndSaveVenues() async {
+  var snapshot = await _firestore.collection('venues').get();
+
+  if (snapshot.docs.isEmpty) {
+    await saveVenuesToFirestore();
   }
+  // await saveVenuesToFirestore();
+  await fetchVenues();
+}
 
   Future<void> saveVenuesToFirestore() async {
     final demoVenues = [
@@ -25,7 +34,9 @@ class VenueController extends GetxController {
         imageUrl: "assets/venue_images/venue_one.jpg",
         facilities: ["AC", "Parking", "Catering", "Decoration"],
         available: true,
-        phno: '98857 84984'
+        phno: '98857 84984',
+        about: 'Elegant banquet hall perfect for grand weddings.',
+        bookedDates: [DateTime(2025, 8, 31)],
       ),
       VenueModel(
         id: "2",
@@ -37,7 +48,9 @@ class VenueController extends GetxController {
         imageUrl: "assets/venue_images/venue_two.jpeg",
         facilities: ["Catering", "Decoration", "AC", "Parking"],
         available: false,
-        phno: '78934 12345'
+        phno: '78934 12345',
+        about: 'Grand wedding hall best suitable for weddings.',
+        bookedDates: []
       ),
     ];
 

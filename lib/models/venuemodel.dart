@@ -9,6 +9,8 @@ class VenueModel {
   final List<String> facilities;
   final bool available;
   final String phno;
+  final String about;
+  final List<DateTime> bookedDates;
 
   VenueModel({
     required this.id,
@@ -20,7 +22,10 @@ class VenueModel {
     required this.imageUrl,
     required this.facilities,
     required this.available,
-    required this.phno
+    required this.phno,
+    required this.about,
+    required this.bookedDates
+
   });
 
   Map<String, dynamic> toJson() {
@@ -34,7 +39,9 @@ class VenueModel {
       'imageUrl': imageUrl,
       'facilities': facilities,
       'available': available,
-      'phno': phno
+      'phno': phno,
+      'about':about,
+      'bookedDates': bookedDates.map((d) => d.toIso8601String()).toList(),
     };
   }
 
@@ -49,7 +56,11 @@ class VenueModel {
       imageUrl: map['imageUrl'] ?? '',
       facilities: List<String>.from(map['facilities'] ?? []),
       available: map['available'] ?? false,
-      phno: map['phno']??''
+      phno: map['phno']??'',
+      about: map['about']??'',
+      bookedDates: (map['bookedDates'] as List<dynamic>? ?? [])
+        .map((d) => DateTime.parse(d as String))
+        .toList(),
     );
   }
 }
