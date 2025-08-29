@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hall_booking_app/models/venuemodel.dart';
+import 'package:hall_booking_app/routes/app_routes.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class VenueDetailsPage extends StatefulWidget {
@@ -285,10 +286,12 @@ class _VenueDetailsPageState extends State<VenueDetailsPage> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
           onPressed: () {
-            Get.snackbar("Booking", "Venue booked successfully!",
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.green,
-                colorText: Colors.white);
+            // Get.snackbar("Booking", "Venue booked successfully!",
+            //     snackPosition: SnackPosition.BOTTOM,
+            //     backgroundColor: Colors.green,
+            //     colorText: Colors.white);
+
+            Get.toNamed(AppRoutes.booking,arguments: {'venue':widget.venue,'selectedDate':Selected_Day});
           },
           child: Text(
             "Book This Venue",

@@ -1,6 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:hall_booking_app/views/bookings/bookings.dart';
+import 'package:hall_booking_app/views/bookings/history.dart';
 import 'package:hall_booking_app/views/home/home.dart';
 import 'package:hall_booking_app/views/profile/profile.dart';
 import 'package:hall_booking_app/views/settings/settings.dart';
@@ -17,7 +18,7 @@ class _PagestackState extends State<Pagestack> {
   List<IconData> iconlist = [Icons.home, Icons.book_online, Icons.people,Icons.settings];
   List<Widget> pages = [
     VenueListPage(),
-    BookingsPage(),
+    BookingHistoryPage(),
     ProfilePage(),
     SettingsPage()
   ];
@@ -27,7 +28,7 @@ class _PagestackState extends State<Pagestack> {
     return Scaffold(
       body: pages[_bottomNavIndex],
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        backgroundColor: Color(0xFFd053d4),
+        backgroundColor: Colors.purple,
         gapLocation: GapLocation.none,
         icons: iconlist,
         activeIndex: _bottomNavIndex,

@@ -4,6 +4,7 @@ import 'package:hall_booking_app/models/venuemodel.dart';
 import 'package:hall_booking_app/routes/app_routes.dart';
 import 'package:hall_booking_app/views/auth/login.dart';
 import 'package:hall_booking_app/views/auth/signup.dart';
+import 'package:hall_booking_app/views/bookings/bookings.dart';
 import 'package:hall_booking_app/views/bookings/viewdetails.dart';
 import 'package:hall_booking_app/views/home/home.dart';
 import 'package:hall_booking_app/views/settings/settings.dart';
@@ -16,6 +17,7 @@ class AppPages {
     GetPage(name: AppRoutes.signup, page: ()=> SignUpPage()),
     GetPage(name: AppRoutes.home, page: ()=> VenueListPage()),
     GetPage(name: AppRoutes.viewDetails, page: ()=> VenueDetailsPage(venue: Get.arguments as VenueModel,)),
+    GetPage(name: AppRoutes.booking, page: ()=> BookingPage(venue: Get.arguments['venue'] as VenueModel,bookedDate: Get.arguments['selectedDate'] as DateTime)),
     GetPage(name: AppRoutes.settings, page: ()=> SettingsPage()),
   ];
 }
