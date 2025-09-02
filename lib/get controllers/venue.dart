@@ -18,7 +18,6 @@ Future<void> _checkAndSaveVenues() async {
   if (snapshot.docs.isEmpty) {
     await saveVenuesToFirestore();
   }
-  // await saveVenuesToFirestore();
   await fetchVenues();
 }
 

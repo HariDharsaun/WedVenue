@@ -1,16 +1,16 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hall_booking_app/get%20controllers/booking.dart';
 import 'package:hall_booking_app/models/venuemodel.dart';
 
 class BookingPage extends StatelessWidget {
   final VenueModel venue;
   final DateTime bookedDate;
+  // ignore: non_constant_identifier_names
+  final Bookings_controller = Get.find<booking_History>();
 
-  const BookingPage({
-    super.key,
-    required this.venue,
-    required this.bookedDate,
-  });
+  BookingPage({super.key, required this.venue, required this.bookedDate});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +34,7 @@ class BookingPage extends StatelessWidget {
               color: Colors.blueGrey,
               height: screenHeight * 0.23,
               width: double.infinity,
+              child: Text("Hall Image"),
             ),
 
             SizedBox(height: screenHeight * 0.03),
@@ -55,12 +56,19 @@ class BookingPage extends StatelessWidget {
             // Location
             Row(
               children: [
-                Icon(Icons.location_on, color: Colors.red, size: screenWidth * 0.045),
+                Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: screenWidth * 0.045,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     venue.location,
-                    style: TextStyle(fontSize: screenWidth * 0.036, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.036,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
               ],
@@ -71,7 +79,11 @@ class BookingPage extends StatelessWidget {
             // Price
             Row(
               children: [
-                Icon(Icons.attach_money, color: Colors.green, size: screenWidth * 0.045),
+                Icon(
+                  Icons.attach_money,
+                  color: Colors.green,
+                  size: screenWidth * 0.045,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   venue.price,
@@ -89,7 +101,11 @@ class BookingPage extends StatelessWidget {
             // Phone Number
             Row(
               children: [
-                Icon(Icons.phone, color: Colors.purple, size: screenWidth * 0.045),
+                Icon(
+                  Icons.phone,
+                  color: Colors.purple,
+                  size: screenWidth * 0.045,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   venue.phno,
@@ -103,7 +119,11 @@ class BookingPage extends StatelessWidget {
             // Booked Date
             Row(
               children: [
-                Icon(Icons.calendar_month, color: Colors.blue, size: screenWidth * 0.045),
+                Icon(
+                  Icons.calendar_month,
+                  color: Colors.blue,
+                  size: screenWidth * 0.045,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   "${bookedDate.day}-${bookedDate.month}-${bookedDate.year}",
@@ -133,7 +153,11 @@ class BookingPage extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.event_available, color: Colors.purple, size: screenWidth * 0.06),
+                  Icon(
+                    Icons.event_available,
+                    color: Colors.purple,
+                    size: screenWidth * 0.06,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -154,14 +178,15 @@ class BookingPage extends StatelessWidget {
         ),
       ),
 
-      // Confirm Booking Button (same as VenueDetails "Book This Venue")
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(14),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.purple,
-            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.018), // same size
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.018),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
           onPressed: () {
             Get.defaultDialog(
@@ -172,25 +197,51 @@ class BookingPage extends StatelessWidget {
               confirmTextColor: Colors.white,
               cancelTextColor: Colors.purple,
               buttonColor: Colors.purple,
-              onConfirm: () {
+              onConfirm: () async {
                 Get.back();
+
                 Get.snackbar(
-                  "Booking Confirmed",
-                  "Your booking has been successfully confirmed!",
+                  "Booking",
+                  "Saving your booking...",
                   snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.blue,
                   colorText: Colors.white,
                   margin: const EdgeInsets.all(12),
                   borderRadius: 12,
+                  duration: const Duration(seconds: 1),
                 );
+
+                try {
+                  await Bookings_controller.bookVenue(venue, bookedDate);
+
+                  AwesomeDialog(
+                    context: Get.context!,
+                    dialogType: DialogType.success,
+                    animType: AnimType.bottomSlide,
+                    title: 'Booking Confirmed',
+                    desc: 'Your booking is successfully saved!',
+                    btnOkOnPress: () {},
+                  ).show();
+
+                } catch (e) {
+                  Get.snackbar(
+                    "Error",
+                    "Failed to save booking: $e",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    margin: const EdgeInsets.all(12),
+                    borderRadius: 12,
+                  );
+                }
               },
               onCancel: () => Get.back(),
             );
           },
           child: Text(
-            "Confirm Booking",
+             "Confirm Booking",
             style: TextStyle(
-              fontSize: screenWidth * 0.04, // same as VenueDetails button
+              fontSize: screenWidth * 0.04,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),

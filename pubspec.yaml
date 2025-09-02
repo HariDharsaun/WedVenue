@@ -16,6 +16,7 @@ dependencies:
   animated_bottom_navigation_bar:
   font_awesome_flutter:
   table_calendar:
+  awesome_dialog:
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,4 @@ flutter:
   assets:
     - assets/app_icons/
     - assets/venue_images/
+    - assets/lotties/

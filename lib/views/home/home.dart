@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hall_booking_app/get%20controllers/venue.dart';
+import 'package:hall_booking_app/models/venuemodel.dart';
 import 'package:hall_booking_app/routes/app_routes.dart';
 
 class VenueListPage extends StatelessWidget {
@@ -37,7 +38,7 @@ class VenueListPage extends StatelessWidget {
                   // Venue Image
                   Stack(
                     children: [
-                      //Venue Images
+                      // Venue Images
                       // ClipRRect(
                       //   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                       //   child: Image.asset(
@@ -61,11 +62,11 @@ class VenueListPage extends StatelessWidget {
                             vertical: screenHeight * 0.005,
                           ),
                           decoration: BoxDecoration(
-                            color: venue.available ? Colors.green : Colors.red,
+                            color: isAvailable(venue) ? Colors.green : Colors.red,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            venue.available ? "Available" : "Booked",
+                            isAvailable(venue) ? "Available" : "Booked",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -176,6 +177,12 @@ class VenueListPage extends StatelessWidget {
           },
         );
       }),
+    );
+  }
+  bool isAvailable(VenueModel venue){
+    DateTime today = DateTime.now();
+    return !venue.bookedDates.any((date)=>
+    date.day == today.day && date.month == today.month && date.year == today.year
     );
   }
 }

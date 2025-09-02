@@ -33,6 +33,7 @@ class AuthController extends GetxController{
         name: name,
         email: email,
         phonenumber: phone,
+        bookings: []
       );
 
       await firestore

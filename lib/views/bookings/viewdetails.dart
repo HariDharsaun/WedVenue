@@ -7,7 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 class VenueDetailsPage extends StatefulWidget {
   final VenueModel venue;
 
-  const VenueDetailsPage({super.key, required this.venue});
+  VenueDetailsPage({super.key, required this.venue});
 
   @override
   State<VenueDetailsPage> createState() => _VenueDetailsPageState();
@@ -32,37 +32,12 @@ class _VenueDetailsPageState extends State<VenueDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Venue Image
-            Stack(
-              children: [
-                Container(
-                  color: Colors.blueGrey,
-                  height: screenHeight * 0.23,
-                  width: double.infinity,
-                ),
-                Positioned(
-                  right: 15,
-                  top: 15,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: widget.venue.available ? Colors.green : Colors.red,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      widget.venue.available ? "Available" : "Booked",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 0.032,
-                      ),
-                    ),
-                  ),
-                )
-              ],
+            Container(
+              color: Colors.blueGrey,
+              height: screenHeight * 0.23,
+              width: double.infinity,
             ),
-
             SizedBox(height: screenHeight * 0.03),
-
             // Venue Name
             Text(
               widget.venue.name,
@@ -212,6 +187,24 @@ class _VenueDetailsPageState extends State<VenueDetailsPage> {
                   return null;
                 },
                 selectedBuilder: (context, day, focusedDay) {
+                  for (var booked in widget.venue.bookedDates) {
+                    if (day.year == booked.year &&
+                        day.month == booked.month &&
+                        day.day == booked.day) {
+                      return Container(
+                        margin: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${day.day}',
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
+                  }
                   return Container(
                     margin: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
@@ -227,20 +220,7 @@ class _VenueDetailsPageState extends State<VenueDetailsPage> {
                 },
               ),
             ),
-            // CalendarDatePicker(
-            //   initialDate: DateTime.now(),
-            //   firstDate: DateTime.now(),
-            //   lastDate: DateTime(DateTime.now().year,DateTime.now().month+6,DateTime.now().day),
-            //   selectableDayPredicate: (day){
-            //     for(var date in venue.bookedDates){
-            //       if(date.year == day.year && date.month == day.month && date.day == day.day) return false;
-            //     }
-            //     return true;
-            //   },
-            //   onDateChanged: (date) {
-            //     print("Selected Date: $date");
-            //   },
-            // ),
+            
             SizedBox(height: screenHeight * 0.012),
             Text("Available dates are highlighted",
                 style: TextStyle(color: Colors.green, fontSize: screenWidth * 0.032)),
@@ -281,19 +261,15 @@ class _VenueDetailsPageState extends State<VenueDetailsPage> {
         padding: const EdgeInsets.all(14),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.purple,
+            backgroundColor: isAvailable() ? Colors.grey.shade700 : Colors.purple,
             padding: EdgeInsets.symmetric(vertical: screenHeight * 0.018),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          onPressed: () {
-            // Get.snackbar("Booking", "Venue booked successfully!",
-            //     snackPosition: SnackPosition.BOTTOM,
-            //     backgroundColor: Colors.green,
-            //     colorText: Colors.white);
-
+          onPressed: isAvailable() ? null : (){
             Get.toNamed(AppRoutes.booking,arguments: {'venue':widget.venue,'selectedDate':Selected_Day});
           },
           child: Text(
+            isAvailable() ? "Unavailable" :
             "Book This Venue",
             style: TextStyle(
                 fontSize: screenWidth * 0.04,
@@ -303,5 +279,8 @@ class _VenueDetailsPageState extends State<VenueDetailsPage> {
         ),
       ),
     );
+  }
+  bool isAvailable(){
+    return widget.venue.bookedDates.any((date)=> date.day == Selected_Day.day && date.month == Selected_Day.month && date.year == Selected_Day.year);
   }
 }
