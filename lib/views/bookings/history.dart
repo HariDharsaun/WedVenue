@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hall_booking_app/get controllers/booking.dart';
+import 'package:lottie/lottie.dart';
 
 class BookingHistoryPage extends StatelessWidget {
   final booking_History controller = Get.put(booking_History());
@@ -48,7 +49,12 @@ class BookingHistoryPage extends StatelessWidget {
 
   Widget _buildBookingList(List bookings, double screenWidth, double screenHeight) {
     if (bookings.isEmpty) {
-      return const Center(child: Text("No bookings found."));
+      return Center(child: Lottie.asset(
+        "assets/lotties/no result found.json",
+        width: screenWidth,   // 60% of screen width
+        height: screenHeight, // 30% of screen height
+        fit: BoxFit.contain,
+      ),);
     }
 
     return ListView.builder(

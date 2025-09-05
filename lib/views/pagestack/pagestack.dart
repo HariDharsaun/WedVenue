@@ -1,6 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:hall_booking_app/views/bookings/bookings.dart';
 import 'package:hall_booking_app/views/bookings/history.dart';
 import 'package:hall_booking_app/views/home/home.dart';
 import 'package:hall_booking_app/views/profile/profile.dart';

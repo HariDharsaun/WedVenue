@@ -17,6 +17,7 @@ dependencies:
   font_awesome_flutter:
   table_calendar:
   awesome_dialog:
+  lottie: 
 
 dev_dependencies:
   flutter_test:
